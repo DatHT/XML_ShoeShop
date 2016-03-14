@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
+    <fo:layout-master-set>
+        <fo:simple-page-master master-name="x" page-height="8.5in" page-width="11in"
+                               margin-top="0.5in" margin-bottom="0.5in" margin-left="1in" margin-right="1in">
+            <fo:region-body margin-top="0.8in" />
+            <fo:region-before extent="1in" />
+            <fo:region-after extent=".75in" />
+        </fo:simple-page-master>
+    </fo:layout-master-set>
+	
+    <fo:page-sequence master-reference="x">
+        
+            
+        <fo:static-content flow-name="xsl-region-before">
+            <fo:block font-size="14pt" font-family="Arial" line-height="24pt" color="cyan" 
+                      space-after.optimum="15pt" text-align="left" padding-top="3pt">
+                Thanh Dat Shop
+            </fo:block>
+            <fo:block font-size="14pt" font-family="Arial" line-height="24pt" color="cyan" 
+                      space-after.optimum="15pt" text-align="left" padding-top="1pt">
+                Quang Trung, Gò Vấp
+            </fo:block>
+            <fo:block font-size="14pt" font-family="Arial" line-height="24pt" color="cyan" 
+                      space-after.optimum="15pt" text-align="left" padding-top="1pt">
+                thanhdatshop@gmail.com
+            </fo:block>
+            <fo:block font-size="14pt" font-family="Arial" line-height="24pt" color="cyan" 
+                      space-after.optimum="15pt" text-align="left" padding-top="1pt">
+                0123456789
+            </fo:block>
+        </fo:static-content>
+		
+        <fo:static-content flow-name="xsl-region-after">
+            <fo:block font-size="18pt" font-family="Arial" line-height="24pt" space-after.optimum="15pt" 
+                      text-align="center" padding-top="3pt">
+            </fo:block>
+                        
+        </fo:static-content>
+		
+        <fo:flow flow-name="xsl-region-body">
+            <fo:block span="all" font-family="Arial" padding-top="3pt" font-size="2em" font-weight="bold" line-height="2" space-before="1em" space-after="1em" space-before.conditionality="retain" space-after.conditionality="retain" background-color="#EEEEEE">
+                <fo:block start-indent="1em" end-indent="1em" text-align="center">Hóa Đơn</fo:block>
+            </fo:block>
+            <fo:block font-family="Arial">Khách hàng: abc</fo:block>
+            <fo:block font-family="Arial">Email: abc</fo:block>
+            <fo:block font-family="Arial">Số điện thoại: abc</fo:block>
+            <fo:block font-family="Arial">Địa chỉ: abc</fo:block>
+            <fo:block font-family="Arial">
+                Subject: Welcome to Grammatically Correct
+                Thanks for requesting the first lesson in the Grammatically Correct Workshop.
+                This is a practical, hands-on course designed to improve your work through a suggested To Do list at the end of each lesson.
+                I hope you enjoy your free lesson, if you would like to continue with the rest of the lessons in the series the footer at the end of the lesson explains how you can obtain them.
+                Best of luck,
+                Elizabeth Ashworth
+                Writers can read.
+                Writers can type their manuscripts.
+                Writers can send their manuscripts to a publisher.
+                Writers can wait for a reply.
+                Writers can be happy or they can be sad when editors return their work.
+                To report spam by a FreeAutoboot User.
+            </fo:block>
+        </fo:flow>
+    </fo:page-sequence>
+</fo:root>

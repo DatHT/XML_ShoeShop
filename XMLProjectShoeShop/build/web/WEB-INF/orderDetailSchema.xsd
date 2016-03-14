@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="orderDetail"
+           xmlns="orderDetail"
+           elementFormDefault="qualified">
+    <xs:element name="orderDetails">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="tblOrderDetail" type="TblOrderDetail" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="TblOrderDetail">
+        <xs:sequence>
+            <xs:element name="id" type="xs:positiveInteger" minOccurs="0"/>
+            <xs:element name="orderId" type="xs:positiveInteger"/>
+            <xs:element name="shoeId" type="xs:positiveInteger"/>
+            <xs:element name="size" type="xs:positiveInteger"/>
+            <xs:element name="quantity" type="xs:positiveInteger"/>
+            <xs:element name="price" type="xs:float"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

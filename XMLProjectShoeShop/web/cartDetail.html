@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Thành Đạt Shop</title>
+        <link href="css/styles.css" rel="stylesheet" type="text/css" />
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed&subset=latin,vietnamese' rel='stylesheet' type='text/css'>
+
+        <script type="text/javascript">
+            var shoeId = '${requestScope.shoeId}';
+
+
+
+            function goCheckout() {
+                var cart = sessionStorage.getItem('ShoeCart');
+                if (cart == null) {
+                    alert("Bạn vui lòng thêm sản phẩm vào giỏ trước khi đặt hàng");
+                } else {
+                    window.location = "checkout.html";
+                }
+            }
+
+            function removeItem(id) {
+                var cart = sessionStorage.getItem('ShoeCart');
+                if (cart != null) {
+                    var cartObj = JSON.parse(cart);
+                    var c = confirm("Bạn có chắc chắn xóa đôi giày này khỏi giỏ không?");
+                    if (c == true) {
+                        for (var i = 0; i < cartObj.length; i++) {
+                            if (cartObj[i].id == id) {
+                                cartObj.splice(i, 1);
+                            }
+                        }
+                    }
+                    sessionStorage.setItem('ShoeCart', JSON.stringify(cartObj));
+                    showCart();
+                }
+
+            }
+
+            function showCart() {
+                var cart = sessionStorage.getItem('ShoeCart');
+                if (cart != null) {
+                    var cartObj = JSON.parse(cart);
+                    if (cartObj.length == 0) {
+                        document.getElementById("cart-detail").innerHTML = "<h1>Hiện tại chưa có sản phẩm nào trong giỏ của bạn</h1>";
+
+                    } else {
+                        var str = "";
+                        var total = 0.0;
+                        for (var i = 0; i < cartObj.length; i++) {
+                            str += '<tr>'
+                                    + '<td>'
+                                    + '<img src="/static/' + cartObj[i].thumbPath + '" width="100" alt="shoe-image"/>'
+                                    + '</td>'
+                                    + '<td>' + cartObj[i].name + '</td>'
+                                    + '<td>' + cartObj[i].size + '</td>'
+                                    + '<td>' + cartObj[i].quantity + '</td>'
+                                    + '<td>' + (cartObj[i].price).toLocaleString() + ' vnd</td>'
+                                    + '<td>' + (cartObj[i].price * cartObj[i].quantity).toLocaleString() + ' vnd</td>'
+                                    + '<td><button class="btn" onclick="removeItem(' + cartObj[i].id + ')">Bỏ khỏi giỏ</button></td>'
+                                    + '</tr>';
+                            total += cartObj[i].price * cartObj[i].quantity;
+                        }
+                        str += '<tr>'
+                                + '<td colspan="5"><b>Tổng giá</b></td>'
+                                + '<td colspan="2">' + total.toLocaleString() + ' vnd</td>'
+                                + '</tr>';
+                        document.getElementById("cart-body").innerHTML = str;
+                    }
+                }
+            }
+
+
+        </script>
+    </head>
+    <body onload="showCart()">
+        <div class="header-wrapper">
+            <div class="menu">
+                <ul>
+                    <li><a>Giỏ hàng của bạn</a></li>
+                </ul>
+                
+            </div>
+            <div class="clearing"></div>
+            <div class="logo-search-wrapper">
+                <div class="logo-search-container">
+                    <div class="logo"> Thành Đạt Shop </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div id="cart-detail">
+            <center>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ảnh đại diện</th>
+                            <th>Sản phẩm</th>
+                            <th>Size</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                            <th>Tổng giá</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-body">
+
+                    </tbody>
+
+                </table>
+
+                <div id="checkout">
+                    <button class="btn" onclick="goCheckout()">Đặt hàng</button>
+                </div>
+            </center>
+
+        </div>
+        <div class="copyrights">Copyright (c) Thành Đạt Shop</div>
+    </body>
+</html>

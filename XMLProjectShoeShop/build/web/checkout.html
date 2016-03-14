@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Thành Đạt Shop</title>
+        <link href="css/styles.css" rel="stylesheet" type="text/css" />
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed&subset=latin,vietnamese' rel='stylesheet' type='text/css'>
+        <script src="js/MyJavascript.js" type="text/javascript"></script>
+        <script>
+
+            var xmlHttp = null;
+            var xmlDom = new ActiveXObject("Microsoft.XMLDOM");
+            var xmlOrder = "";
+            var xmlOrderDetail = "";
+
+
+            function sendRequestAjax() {
+
+                var xmlStr;
+                xmlHttp = getXmlHttpObject();
+                if (xmlHttp == null) {
+                    alert("Your browser is not support ajax");
+                }
+
+                var url = "CheckoutServlet";
+                xmlHttp.onreadystatechange = function () {
+                    if (xmlHttp.readyState == 4) {
+                        if (xmlHttp.status == 200) {
+                            if (xmlHttp.responseText.indexOf("vấn đề") < 0) {
+                                sessionStorage.removeItem('ShoeCart');
+                            }
+                            document.getElementById("contac-form").style.display = "none";
+                            document.getElementById("export-pdf").style.display = "block";
+                            document.getElementById("response-text").innerText = xmlHttp.responseText;
+                        }
+
+
+                    }
+                };
+                xmlHttp.open("POST", url, true);
+                xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                var urlVar = "orderDetailXml=" + xmlOrderDetail + "&orderXml=" + xmlOrder;
+                xmlHttp.send(urlVar);
+
+            }
+            
+            
+
+            function checkout() {
+                var name = document.getElementById("name").value;
+                var email = document.getElementById("email").value;
+                var phone = document.getElementById("phone").value;
+                var address = document.getElementById("address").value;
+                var note = document.getElementById("note").value;
+                var isValidate = true;
+                if (name.trim().length == 0 || address.trim().length == 0
+                        || email.trim().length == 0 || phone.trim().length == 0) {
+                    isValidate = false;
+                    alert("Vui lòng không để trống tên, email, số điện thoại và địa chỉ");
+                }
+                if (!/^\d{10,11}$/.test(phone)) {
+                    alert("Số điện thoại là số gồm từ 10 tới 11 kí tự");
+                    isValidate = false;
+                }
+                if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/.test(email)) {
+                    alert("Vui lòng nhập đúng địa chỉ email");
+                    isValidate = false;
+                }
+
+                if (isValidate) {
+                    var cart = sessionStorage.getItem('ShoeCart');
+                    if (cart != null) {
+                        var cartObj = JSON.parse(cart);
+                        var total = 0.0;
+                        for (var i = 0; i < cartObj.length; i++) {
+                            total += cartObj[i].price * cartObj[i].quantity;
+                        }
+                        var dateTime = (new Date()).toISOString();
+                        xmlOrder = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                                + "<tblOrder "
+                                + "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' "
+                                + "xmlns='order' "
+                                + "xsi:schemaLocation='order orderSchema.xsd'>";
+                        //status: 1: new, 2: delivered
+                        xmlOrder += "<orderTime>" + dateTime + "</orderTime>"
+                                + "<total>" + total + "</total>"
+                                + "<status>1</status>";
+                        var user = sessionStorage.getItem("loggedUser");
+                        if (user != null) {
+                            xmlOrder += "<cusId>" + user + "</cusId>"
+                                    + "<note>" + note + "</note>"
+                                    + "</shoeOrder>";
+                        } else {
+                            xmlOrder += "<cusName>" + name + "</cusName>"
+                                    + "<cusEmail>" + email + "</cusEmail>"
+                                    + "<cusPhone>" + phone + "</cusPhone>"
+                                    + "<cusAddress>" + address + "</cusAddress>"
+                                    + "<note>" + note + "</note>"
+                                    + "</tblOrder>";
+                        }
+                        //end xmlOrder
+                        xmlOrderDetail = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                                + "<orderDetails "
+                                + "xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' "
+                                + "xmlns='orderDetail' "
+                                + "xsi:schemaLocation='orderDetail orderDetailSchema.xsd'>";
+                        for (var j = 0; j < cartObj.length; j++) {
+                            xmlOrderDetail += "<tblOrderDetail>"
+                                    + "<orderId>1</orderId>"
+                                    + "<shoeId>" + cartObj[j].id + "</shoeId>"
+                                    + "<size>" + cartObj[j].size + "</size>"
+                                    + "<quantity>" + cartObj[j].quantity + "</quantity>"
+                                    + "<price>" + cartObj[j].price + "</price>"
+                                    + "</tblOrderDetail>";
+                        }
+                        xmlOrderDetail += "</orderDetails>";
+                        sendRequestAjax();
+                    }
+
+                }
+            }
+            
+            function loadInit() {
+                
+                document.getElementById("export-pdf").style.display = "none";
+            }
+        </script>
+    </head>
+    <body onload="loadInit()">
+        <div class="header-wrapper">
+            <div class="menu">
+                <ul>
+                    <li><a>Phiếu xác nhận thông tin khách hàng</a></li>
+                </ul>
+                
+            </div>
+            <div class="clearing"></div>
+            <div class="logo-search-wrapper">
+                <div class="logo-search-container">
+                    <div class="logo"> Thành Đạt Shop </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="portfolio">
+            <div class="portfolio-title ">
+                <h1>Xác nhận thông tin</h1>
+            </div>
+
+            <div class="contact-form margin-top" id="contac-form">
+                <label> <span>Tên của bạn</span>
+                    <input type="text" class="input_text" name="name" id="name"/>
+                </label>
+                <label> <span>Email</span>
+                    <input type="text" class="input_text" name="email" id="email"/>
+                </label>
+                <label> <span>Số điện thoại</span>
+                    <input type="text" class="input_text" name="phone" id="phone"/>
+                </label>
+                <label> <span>Địa chỉ</span>
+                    <input type="text" class="input_text" name="address" id="address"/>
+                </label>
+                <label> <span>Ghi chú</span>
+                    <textarea class="message" name="note" id="note"></textarea>
+                    <input type="button" class="button" value="Xác nhận" onclick="checkout()"/>
+                </label>
+            </div>
+            <div id="export-pdf">
+                <h1 style="color:#00aeef">Bạn đã đặt hàng thành công</h1>
+                <p id="response-text"></p>
+                <br/>
+                <form action="CombineFOWithXSL">
+                    <input type="hidden" name="xmlOrder" id="hidden1" />
+                    <input type="hidden" name="xmlOrderDetail" id="hidden2" />
+                    <input type="submit" class="btn" value="Xuất hóa đơn" onclick="sendParam()"/>
+                </form>
+                <br/> <br/>
+            </div>
+
+            <div class="clearing"></div>
+        </div>
+        <div id="output" ></div>
+        <div class="copyrights">Copyright (c) Thành Đạt Shop</div>
+        <script>
+            function sendParam() {
+                document.getElementById("hidden1").value = xmlOrder;
+                document.getElementById("hidden2").value = xmlOrderDetail;
+                return true;
+            }
+        </script>
+        
+    </body>
+</html>

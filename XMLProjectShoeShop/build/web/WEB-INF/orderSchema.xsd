@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="order"
+           xmlns="order"
+           elementFormDefault="qualified">
+    <xs:element name="tblOrder" type="TblOrder" />
+    <xs:complexType name="TblOrder">
+        <xs:sequence>
+            <xs:element name="id" type="xs:positiveInteger" minOccurs="0"/>
+            <xs:element name="orderTime" type="xs:dateTime"/>
+            <xs:element name="total" type="xs:float"/>
+            <xs:element name="status" type="xs:positiveInteger"/>
+            <xs:element name="cusId" type="xs:string" minOccurs="0"/>
+            <xs:element name="cusName" type="xs:string" minOccurs="0"/>
+            <xs:element name="cusEmail" type="xs:string" minOccurs="0"/>
+            <xs:element name="cusPhone" type="xs:string" minOccurs="0"/>
+            <xs:element name="cusAddress" type="xs:string" minOccurs="0"/>
+            <xs:element name="note" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>
